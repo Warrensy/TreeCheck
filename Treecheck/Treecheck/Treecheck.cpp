@@ -15,11 +15,12 @@ void readTree()
 {
     std::string filePath;
     std::cout << "Dateipfad für import: ";
-    std::cin >> filePath; ,
+    std::cin >> filePath;
 }
 
 int main()
 {
     std::cout << "Hello World!\n";
+    std::cout << "Hi!";
 }
 
