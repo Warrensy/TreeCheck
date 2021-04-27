@@ -11,9 +11,11 @@ public:
 
     void read();
 
-    void add(int n);
+    void findMax(::tnode* node, int sum, int max, int min, int count);
 
     void printTree(::tnode* node);
+
+    void checkNode(::tnode* node, int newKey);
 
     tnode* search(int n);
 
