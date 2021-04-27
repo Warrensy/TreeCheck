@@ -3,6 +3,6 @@
 struct tnode
 {
     int key;
-    struct tnode* left;
-    struct tnode* right;
+    struct tnode* left = nullptr;
+    struct tnode* right = nullptr;
 };

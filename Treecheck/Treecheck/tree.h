@@ -9,13 +9,15 @@ public:
     Tree();
     ~Tree();
 
-    void read(struct::tnode* node);
+    void read();
 
     void add(int n);
 
+    void printTree(::tnode* node);
+
     tnode* search(int n);
 
-private:
     tnode* node;
+private:
 };
 
