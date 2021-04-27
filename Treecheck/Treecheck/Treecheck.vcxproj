@@ -143,6 +143,7 @@
     <ClCompile Include="Treecheck.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

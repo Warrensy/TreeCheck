@@ -1,15 +1,21 @@
 #pragma once
-class tree
-{
-    public:
-        struct tnode
-        {
-            short balance;
-            int key;
-            struct tnode* left;
-            struct tnode* right;
-            struct tnode* parent;
-        };
+#include "Structs.h"
+#include <string>
+#include <iostream>
 
+class Tree
+{
+public:
+    Tree();
+    ~Tree();
+
+    void read();
+
+    void add(int n);
+
+    tnode* search(int n);
+
+private:
+    tnode* root;
 };
 

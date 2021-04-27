@@ -5,17 +5,9 @@
 #include <fstream>
 #include "tree.h"
 
-
-
-void readTree()
-{
-    std::string filePath;
-    std::cout << "Dateipfad für import: ";
-    std::cin >> filePath;
-}
-
 int main()
 {
+    Tree* tree = new Tree();
     std::cout << "Hello World!\n";
 }
 
