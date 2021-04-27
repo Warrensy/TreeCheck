@@ -11,6 +11,7 @@ Tree::~Tree()
 
 }
 
+
 // Rekursiv. Geht wenn möglich zuerst links ansonsten rechts.
 void Tree::printTree(::tnode* node)
 {
@@ -75,31 +76,68 @@ void Tree::read()
 	}
 	std::cout << std::endl << "Baum erfolgreich eingebunden" << std::endl;
 	printTree(root);
-	//findMax(root, 0, 0, 1000, 0);
+	std::cout << "Max: " << findMax(root, 0) << std::endl;
+	std::cout << "Min: " << findMin(root, 1000) << std::endl;
+	std::cout << "Avg: " << findAvg(root, 0, 0) << std::endl;
 	MyReadFile.close();
 }
 
-//void Tree::findMax(::tnode* node, int sum, int max, int min, int count)
-//{
-//	count++;
-//	sum += node->key;
-//	if (node->key < min) { min = node->key; }
-//	if (node->key > max) { max = node->key; }
-//	if (node->left != nullptr)
-//	{
-//		findMax(node->left, sum, max, min, count);
-//	}
-//	if (node->right != nullptr)
-//	{
-//		findMax(node->left, sum, max, min, count);
-//	}
-//	if(node->left == nullptr && node->right == nullptr)
-//	{
-//		std::cout << "MIN Value: " << min << std::endl;
-//		std::cout << "MAX Value: " << max << std::endl;
-//		std::cout << "AVG Value: " << sum/count << std::endl;
-//	}
-//}
+int Tree::findMin(::tnode* node, int min)
+{
+	if (node->key < min) { min = node->key; }
+	if (node->left != nullptr)
+	{
+		if (min > findMin(node->left, min))
+		{
+			min = findMin(node->left, min);
+		}
+	}
+	if (node->right != nullptr)
+	{
+		if (min > findMin(node->right, min))
+		{
+			min = findMin(node->right, min);
+		}
+	}
+	return min;
+
+}
+
+int Tree::findMax(::tnode* node, int max)
+{
+	if (node->key > max) { max = node->key; }
+	if (node->left != nullptr)
+	{
+		if (max < findMax(node->left, max))
+		{
+			max = findMax(node->left, max);
+		}
+	}
+	if (node->right != nullptr)
+	{
+		if (max < findMax(node->right, max))
+		{
+			max = findMax(node->right, max);
+		}
+	}
+	return max;
+}
+
+int Tree::findAvg(::tnode* node, float sum, int count)
+{
+	count++;
+	sum += node->key;
+	if (node->left != nullptr)
+	{
+		sum = findAvg(node->left, sum, count)*(count+1);
+	}
+	if (node->right != nullptr)
+	{
+		sum = findAvg(node->left, sum, count) * (count + 1);
+	}
+	
+	return sum/count;
+}
 
 tnode* Tree::search(int n)
 {

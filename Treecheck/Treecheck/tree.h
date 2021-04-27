@@ -11,7 +11,11 @@ public:
 
     void read();
 
-    void findMax(::tnode* node, int sum, int max, int min, int count);
+    int findMax(::tnode* node, int max);
+
+    int findAvg(::tnode* node, float sum, int count);
+
+    int findMin(::tnode* node, int min);
 
     void printTree(::tnode* node);
 
