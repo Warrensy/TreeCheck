@@ -3,13 +3,9 @@
 
 #include <iostream>
 #include <fstream>
+#include "tree.h"
 
-struct tnode
-{
-    int key;
-    struct tnode* left;
-    struct tnode* right;
-};
+
 
 void readTree()
 {
@@ -21,6 +17,5 @@ void readTree()
 int main()
 {
     std::cout << "Hello World!\n";
-    std::cout << "Hi!";
 }
 
