@@ -1,5 +1,7 @@
-// Treecheck.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// FH Technikum 
+// ALGOS SS21 
+// BIF C2
+// Bilicky Lukas & Dorian Fetty
 
 #include <iostream>
 #include <fstream>
