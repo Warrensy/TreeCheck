@@ -15,6 +15,10 @@ public:
 
     int findAvg(::tnode* node, float sum, int count);
 
+    void findAvgMinMax(::tnode* node);
+
+    void findAvgMinMaxAlt(::tnode* node, int& min, int& max, int& sum, int& count);
+
     int findMin(::tnode* node, int min);
 
     void printTree(::tnode* node);
@@ -25,5 +29,7 @@ public:
 
     tnode* node;
 private:
+
+    int maxValue, minValue, totalValue, nodesCount;
 };
 

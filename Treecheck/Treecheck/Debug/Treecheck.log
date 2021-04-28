@@ -1,5 +1,7 @@
-﻿  tree.cpp
-C:\Users\Dorian\source\repos\IT_Projekt\TreeCheck\Treecheck\Treecheck\tree.cpp(132,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Dorian\source\repos\IT_Projekt\TreeCheck\Treecheck\Treecheck\tree.cpp(136,41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Dorian\source\repos\IT_Projekt\TreeCheck\Treecheck\Treecheck\tree.cpp(139,12): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  Treecheck.vcxproj -> C:\Users\Dorian\source\repos\IT_Projekt\TreeCheck\Treecheck\Debug\Treecheck.exe
+﻿  Treecheck.cpp
+  tree.cpp
+C:\Users\lukyb\Documents\ALGOS\Projekt2\TreeCheck\Treecheck\Treecheck\tree.cpp(150,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\lukyb\Documents\ALGOS\Projekt2\TreeCheck\Treecheck\Treecheck\tree.cpp(154,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\lukyb\Documents\ALGOS\Projekt2\TreeCheck\Treecheck\Treecheck\tree.cpp(157,12): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
+  Treecheck.vcxproj -> C:\Users\lukyb\Documents\ALGOS\Projekt2\TreeCheck\Treecheck\Debug\Treecheck.exe
