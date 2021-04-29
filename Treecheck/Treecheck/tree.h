@@ -6,20 +6,14 @@
 class Tree
 {
 public:
-    Tree();
+    Tree(std::string filename);
     ~Tree();
 
     void read();
 
-    int findMax(::tnode* node, int max);
-
-    int findAvg(::tnode* node, float sum, int count);
-
     void findAvgMinMax(::tnode* node);
 
     void findAvgMinMaxAlt(::tnode* node, int& min, int& max, int& sum, int& count);
-
-    int findMin(::tnode* node, int min);
 
     void printTree(::tnode* node);
 

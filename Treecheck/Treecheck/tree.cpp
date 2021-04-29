@@ -1,7 +1,7 @@
 #include <fstream>
 #include "tree.h"
 
-Tree::Tree()
+Tree::Tree(std::string filename)
 {
 	this->minValue = NULL;
 	this->maxValue = NULL;
@@ -100,63 +100,6 @@ void Tree::read()
 	MyReadFile.close();
 }
 
-int Tree::findMin(::tnode* node, int min)
-{
-	if (node->key < min) { min = node->key; }
-	if (node->left != nullptr)
-	{
-		if (min > findMin(node->left, min))
-		{
-			min = findMin(node->left, min);
-		}
-	}
-	if (node->right != nullptr)
-	{
-		if (min > findMin(node->right, min))
-		{
-			min = findMin(node->right, min);
-		}
-	}
-	return min;
-
-}
-
-int Tree::findMax(::tnode* node, int max)
-{
-	if (node->key > max) { max = node->key; }
-	if (node->left != nullptr)
-	{
-		if (max < findMax(node->left, max))
-		{
-			max = findMax(node->left, max);
-		}
-	}
-	if (node->right != nullptr)
-	{
-		if (max < findMax(node->right, max))
-		{
-			max = findMax(node->right, max);
-		}
-	}
-	return max;
-}
-
-int Tree::findAvg(::tnode* node, float sum, int count)
-{
-	count++;
-	sum += node->key;
-	if (node->left != nullptr)
-	{
-		sum = findAvg(node->left, sum, count)*(count+1);
-	}
-	if (node->right != nullptr)
-	{
-		sum = findAvg(node->right, sum, count) * (count + 1);
-	}
-	
-	return sum/count;
-}
-
 void Tree::findAvgMinMax(::tnode* node)
 {
 	this->nodesCount++;
@@ -179,33 +122,6 @@ void Tree::findAvgMinMax(::tnode* node)
 	if (node->right != nullptr)
 	{
 		this->findAvgMinMax(node->right);
-	}
-
-	return;
-}
-
-void Tree::findAvgMinMaxAlt(::tnode* node, int& min, int& max, int& sum, int& count)
-{
-	count++;
-	sum += node->key;
-	if (min == NULL && max == NULL) {
-		min = node->key;
-		min = node->key;
-	}
-	else {
-		if (node->key > max)
-			max = node->key;
-		if (node->key < min)
-			min = node->key;
-	}
-
-	if (node->left != nullptr)
-	{
-		this->findAvgMinMaxAlt(node->left, min, max, sum, count);
-	}
-	if (node->right != nullptr)
-	{
-		this->findAvgMinMaxAlt(node->right, min, max, sum, count);
 	}
 
 	return;
