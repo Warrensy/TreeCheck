@@ -11,17 +11,19 @@ public:
 
     void read();
 
-    void findAvgMinMax(::tnode* node);
+    void findAvgMinMax(tnode* node);
 
-    void findAvgMinMaxAlt(::tnode* node, int& min, int& max, int& sum, int& count);
+    void findAvgMinMaxAlt(tnode* node, int& min, int& max, int& sum, int& count);
 
-    void printTree(::tnode* node);
+    void printTree(tnode* node);
 
-    void checkNode(::tnode* node, int newKey);
+    void addNode(tnode* node, int newKey);
 
-    tnode* search(int n);
+    tnode* search(tnode* node, int n);
 
-    tnode* node;
+    int calcBalance(tnode* node);
+
+    tnode* root;
 private:
 
     int maxValue, minValue, totalValue, nodesCount;

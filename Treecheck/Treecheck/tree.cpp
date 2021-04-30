@@ -6,6 +6,7 @@ Tree::Tree(std::string filename)
 	this->minValue = NULL;
 	this->maxValue = NULL;
 	this->totalValue = this->nodesCount = 0;
+	this->root = nullptr;
 	read();
 }
 
@@ -16,7 +17,7 @@ Tree::~Tree()
 
 
 // Rekursiv. Geht wenn möglich zuerst links ansonsten rechts.
-void Tree::printTree(::tnode* node)
+void Tree::printTree(tnode* node)
 {
 	if (node->left != nullptr)
 	{
@@ -30,7 +31,7 @@ void Tree::printTree(::tnode* node)
 }
 
 // Rekursiv. Geht systematisch nach links oder rechts bis er eine Node einfügen kann.
-void Tree::checkNode(::tnode* node, int newKey)
+void Tree::addNode(tnode* node, int newKey)
 {
 	if (newKey < node->key)
 	{
@@ -39,7 +40,7 @@ void Tree::checkNode(::tnode* node, int newKey)
 			node->left = new tnode;
 			node->left->key = newKey;
 		}
-		checkNode(node->left, newKey);
+		addNode(node->left, newKey);
 	}
 	if (newKey > node->key)
 	{
@@ -50,7 +51,7 @@ void Tree::checkNode(::tnode* node, int newKey)
 		}
 		else
 		{
-		checkNode(node->right, newKey);
+		addNode(node->right, newKey);
 		}
 	}
 }
@@ -58,8 +59,6 @@ void Tree::checkNode(::tnode* node, int newKey)
 // Ließt Baum aus .txt file aus.
 void Tree::read()
 {
-	tnode* node = nullptr;
-	tnode* root = nullptr;
 	std::string readText, filePath;
 	int newKey = 0;
 	std::cout << "Dateipfad für import: ";
@@ -69,33 +68,24 @@ void Tree::read()
 	// Für den ersten Knoten.
 	getline(MyReadFile, readText);
 	newKey = stoi(readText);
-	node = new tnode;
-	node->key = newKey;
-	root = node;
+	this->root = new tnode;
+	this->root->key = newKey;
 	while (getline(MyReadFile, readText))
 	{
 		newKey = stoi(readText);
-		checkNode(root, newKey);
+		addNode(this->root, newKey);
 	}
 	std::cout << std::endl << "Baum erfolgreich eingebunden" << std::endl;
-	printTree(root);
-	/*std::cout << "Max: " << findMax(root, 0) << std::endl;
-	std::cout << "Min: " << findMin(root, 1000) << std::endl;
-	std::cout << "Avg: " << findAvg(root, 0, 0) << std::endl;*/
+	printTree(this->root);
 
-	this->findAvgMinMax(root);
+	this->findAvgMinMax(this->root);
 	std::cout << "Max: " << this->maxValue << std::endl;
 	std::cout << "Min: " << this->minValue << std::endl;
 	std::cout << "Avg: " << this->totalValue/this->nodesCount << std::endl;
 
-	int min, max, sum, count;
-	min = max = NULL;
-	sum = count = 0;
+	this->calcBalance(this->root);
 
-	this->findAvgMinMaxAlt(root, min, max, sum, count);
-	std::cout << "Max: " << max << std::endl;
-	std::cout << "Min: " << min << std::endl;
-	std::cout << "Avg: " << sum/count << std::endl;
+	std::cout << "Found:" << this->search(this->root, 84);
 
 	MyReadFile.close();
 }
@@ -127,7 +117,54 @@ void Tree::findAvgMinMax(::tnode* node)
 	return;
 }
 
-tnode* Tree::search(int n)
+tnode* Tree::search(tnode* node, int n)
 {
+	tnode* left, * right;
+	left = right = nullptr;
+	
+	if (n == node->key) {
+		return node;
+	}
+	if (n < node->key)
+	{
+		if (node->left != nullptr) {
+			left = this->search(node->left, n);
+		}
+	}
+	if (n > node->key)
+	{
+		if (node->right != nullptr) {
+			right = this->search(node->right, n);
+		}
+	}
+	if (left != nullptr) {
+		return left;
+	}
+	if (right != nullptr) {
+		return right;
+	}
 	return nullptr;
+}
+
+int Tree::calcBalance(tnode* node)
+{
+	int bal, balLeft, balRight;
+	bal = balLeft = balRight = 0;
+	if (node->left != nullptr)
+	{
+		balLeft = this->calcBalance(node->left);
+	}
+	if (node->right != nullptr)
+	{
+		balRight = this->calcBalance(node->right);
+	}
+	bal = balRight - balLeft;
+	std::cout << "bal(" << node->key << ") = " << bal << (bal < -1 || bal > 1 ? " (AVL violation!)" : "") << "\n";
+
+	if (node->right == nullptr && node->left == nullptr) { //Blattknoten
+		return 1;
+	}
+	else {
+		return 1 + (balRight > balLeft ? balRight : balLeft);
+	}
 }
