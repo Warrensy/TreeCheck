@@ -3,37 +3,22 @@
 
 Tree::Tree()
 {
-	this->minValue = NULL;
-	this->maxValue = NULL;
-	this->totalValue = this->nodesCount = 0;
+	this->isAVL = true;
 	this->root = nullptr;
 	read();
 
-	std::string subTree;
-	std::cout << "Enter 'x' to skip.";
-	std::cout << "Search: ";
-	std::cin >> subTree;
-	if (subTree != "x")
-	{
-		if (this->search(this->root, stoi(subTree)) != nullptr)
-		{
-			std::cout << subTree << "found ";
-			for (int i = this->searchPath.size()-1; i > 0; i--)
-			{
-				std::cout << this->searchPath[i] << ",";
-			}
-		}
-		else
-		{
-			std::cout << subTree << "Not Found" << std::endl;
-		}
-		this->search(this->root, stoi(subTree));
-	}
+	std::string nodeToFind;
+	do {
+		std::cout << "Enter 'x' to skip.\n";
+		std::cout << "Search: ";
+		std::cin >> nodeToFind;
+		superSearch(nodeToFind);
+	} while (nodeToFind.compare("x") != 0);
 }
 
 Tree::~Tree()
 {
-
+	deleteTree(this->root);
 }
 
 
@@ -77,13 +62,51 @@ void Tree::addNode(tnode* node, int newKey)
 	}
 }
 
-// Ließt Baum aus .txt file aus.
-void Tree::read()
+void Tree::deleteTree(tnode* node)
 {
-	std::string readText, filePath;
+	if (node->left != nullptr)
+	{
+		deleteTree(node->left);
+	}
+	if (node->right != nullptr)
+	{
+		deleteTree(node->right);
+	}
+	delete node;
+}
+
+tnode* Tree::superSearch(std::string nodeToFind)
+{
+	tnode* resultNode = nullptr;
+	if (nodeToFind != "x")
+	{
+		std::vector<int> path;
+		if ((resultNode = this->search(this->root, stoi(nodeToFind), path)) != nullptr)
+		{
+			std::cout << nodeToFind << " found ";
+			for (int i = path.size() - 1; i >= 0; i--)
+			{
+				std::cout << path[i] << (i != 0 ? ", " : "\n");
+			}
+		}
+		else
+		{
+			std::cout << nodeToFind << " Not Found" << std::endl;
+		}
+	}
+
+	return resultNode;
+}
+
+// Ließt Baum aus .txt file aus.
+void Tree::read(std::string filePath)
+{
+	std::string readText;
 	int newKey = 0;
-	std::cout << "Dateipfad für import: ";
-	std::cin >> filePath;
+	if (filePath.compare("null") == 0) {
+		std::cout << "Dateipfad für import: ";
+		std::cin >> filePath;
+	}
 	std::fstream MyReadFile(filePath);
 	
 	// Für den ersten Knoten.
@@ -100,96 +123,104 @@ void Tree::read()
 	std::cout << std::endl << "Baum erfolgreich eingebunden" << std::endl;
 	printTree(this->root);
 
-	this->findAvgMinMax(this->root);
-	std::cout << "Max: " << this->maxValue << std::endl;
-	std::cout << "Min: " << this->minValue << std::endl;
-	std::cout << "Avg: " << this->totalValue/this->nodesCount << std::endl;
+	int minValue, maxValue, totalValue, nodesCount;
+	minValue = maxValue = NULL;
+	totalValue = nodesCount = 0;
+	findAvgMinMax(this->root, minValue, maxValue, totalValue, nodesCount);
+	std::cout << "Max: " << maxValue << std::endl;
+	std::cout << "Min: " << minValue << std::endl;
+	std::cout << "Avg: " << (float)totalValue/(float)nodesCount << std::endl;
 
-	this->calcBalance(this->root);
+	calcBalance(this->root);
 
 	//std::cout << "Found:" << this->search(this->root, 100);
 
 	MyReadFile.close();
 }
 
-void Tree::findAvgMinMax(::tnode* node)
+void Tree::findAvgMinMax(::tnode* node, int& minValue, int& maxValue, int& totalValue, int& nodesCount)
 {
-	this->nodesCount++;
-	this->totalValue += node->key;
-	if (this->minValue == NULL && this->maxValue == NULL) {
-		this->maxValue = node->key;
-		this->minValue = node->key;
+	nodesCount++;
+	totalValue += node->key;
+	if (minValue == NULL && maxValue == NULL) {
+		maxValue = node->key;
+		minValue = node->key;
 	}
 	else {
-		if (node->key > this->maxValue)
-			this->maxValue = node->key;
-		if (node->key < this->minValue)
-			this->minValue = node->key;
+		if (node->key > maxValue)
+			maxValue = node->key;
+		if (node->key < minValue)
+			minValue = node->key;
 	}
 
 	if (node->left != nullptr)
 	{
-		this->findAvgMinMax(node->left);
+		findAvgMinMax(node->left, minValue, maxValue, totalValue, nodesCount);
 	}
 	if (node->right != nullptr)
 	{
-		this->findAvgMinMax(node->right);
+		findAvgMinMax(node->right, minValue, maxValue, totalValue, nodesCount);
 	}
 
 	return;
 }
 
-tnode* Tree::search(tnode* node, int n)
+
+
+tnode* Tree::search(tnode* node, int n, std::vector<int>& path)
 {
 	tnode* left, * right;
 	left = right = nullptr;
 	
 	if (n == node->key) {
-		this->searchPath.emplace_back(node->key);
+		path.emplace_back(node->key);
 		return node;
 	}
 	if (n < node->key)
 	{
 		if (node->left != nullptr) {
-			left = this->search(node->left, n);
+			left = search(node->left, n, path);
 		}
 	}
 	if (n > node->key)
 	{
 		if (node->right != nullptr) {
-			right = this->search(node->right, n);
+			right = search(node->right, n, path);
 		}
 	}
+
 	if (left != nullptr) {
-		this->searchPath.emplace_back(node->key);
+		path.emplace_back(node->key);
 		return left;
 	}
 	if (right != nullptr) {
-		this->searchPath.emplace_back(node->key);
+		path.emplace_back(node->key);
 		return right;
 	}
 	return nullptr;
 }
 
+//Berechnet die Balanz für jede Node, rekursiv
 int Tree::calcBalance(tnode* node)
 {
 	int bal, balLeft, balRight;
 	bal = balLeft = balRight = 0;
 	if (node->left != nullptr)
 	{
-		balLeft = this->calcBalance(node->left);
+		balLeft = calcBalance(node->left);
 	}
 	if (node->right != nullptr)
 	{
-		balRight = this->calcBalance(node->right);
+		balRight = calcBalance(node->right);
 	}
-	bal = balRight - balLeft;
+	bal = balRight - balLeft; //links ist hierbei die "negative" Balanz
 	std::cout << "bal(" << node->key << ") = " << bal << (bal < -1 || bal > 1 ? " (AVL violation!)" : "") << "\n";
+	bal < -1 || bal > 1 ? this->isAVL = false : false;
 
 	if (node->right == nullptr && node->left == nullptr) { //Blattknoten
 		return 1;
 	}
 	else {
-		return 1 + (balRight > balLeft ? balRight : balLeft);
+		return 1 + (balRight > balLeft ? balRight : balLeft); //die drüberliegende Node interessiert nur der längere Zweig
 	}
 }
