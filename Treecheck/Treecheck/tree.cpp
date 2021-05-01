@@ -1,13 +1,34 @@
 #include <fstream>
 #include "tree.h"
 
-Tree::Tree(std::string filename)
+Tree::Tree()
 {
 	this->minValue = NULL;
 	this->maxValue = NULL;
 	this->totalValue = this->nodesCount = 0;
 	this->root = nullptr;
 	read();
+
+	std::string subTree;
+	std::cout << "Enter 'x' to skip.";
+	std::cout << "Search: ";
+	std::cin >> subTree;
+	if (subTree != "x")
+	{
+		if (this->search(this->root, stoi(subTree)) != nullptr)
+		{
+			std::cout << subTree << "found ";
+			for (int i = this->searchPath.size()-1; i > 0; i--)
+			{
+				std::cout << this->searchPath[i] << ",";
+			}
+		}
+		else
+		{
+			std::cout << subTree << "Not Found" << std::endl;
+		}
+		this->search(this->root, stoi(subTree));
+	}
 }
 
 Tree::~Tree()
@@ -70,6 +91,7 @@ void Tree::read()
 	newKey = stoi(readText);
 	this->root = new tnode;
 	this->root->key = newKey;
+
 	while (getline(MyReadFile, readText))
 	{
 		newKey = stoi(readText);
@@ -85,7 +107,7 @@ void Tree::read()
 
 	this->calcBalance(this->root);
 
-	std::cout << "Found:" << this->search(this->root, 84);
+	//std::cout << "Found:" << this->search(this->root, 100);
 
 	MyReadFile.close();
 }
@@ -123,6 +145,7 @@ tnode* Tree::search(tnode* node, int n)
 	left = right = nullptr;
 	
 	if (n == node->key) {
+		this->searchPath.emplace_back(node->key);
 		return node;
 	}
 	if (n < node->key)
@@ -138,9 +161,11 @@ tnode* Tree::search(tnode* node, int n)
 		}
 	}
 	if (left != nullptr) {
+		this->searchPath.emplace_back(node->key);
 		return left;
 	}
 	if (right != nullptr) {
+		this->searchPath.emplace_back(node->key);
 		return right;
 	}
 	return nullptr;

@@ -2,18 +2,17 @@
 #include "Structs.h"
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Tree
 {
 public:
-    Tree(std::string filename);
+    Tree();
     ~Tree();
 
     void read();
 
     void findAvgMinMax(tnode* node);
-
-    void findAvgMinMaxAlt(tnode* node, int& min, int& max, int& sum, int& count);
 
     void printTree(tnode* node);
 
@@ -24,7 +23,10 @@ public:
     int calcBalance(tnode* node);
 
     tnode* root;
+
 private:
+
+    std::vector<int> searchPath;
 
     int maxValue, minValue, totalValue, nodesCount;
 };
