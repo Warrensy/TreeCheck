@@ -14,6 +14,28 @@ Tree::Tree()
 		std::cin >> nodeToFind;
 		superSearch(nodeToFind);
 	} while (nodeToFind.compare("x") != 0);
+	std::vector<int> subTree;
+	std::string input;
+
+	std::cout << "Enter 'x' to submit Subtree. (Empty Subtree = skip)\n";
+	std::cout << "Subtree Search: \n";
+	while(input != "x")
+	{
+		std::cin >> input;
+		if (input != "x")
+		{
+			subTree.emplace(subTree.begin(), stoi(input));
+		}
+	}
+	int i = 1;
+	if (subTreeSearch(this->root, subTree) != nullptr)
+	{
+		std::cout << "Subtree found.\n";
+	}
+	else
+	{
+		std::cout << "Subtree not found.\n";
+	}	
 }
 
 Tree::~Tree()
@@ -223,4 +245,62 @@ int Tree::calcBalance(tnode* node)
 	else {
 		return 1 + (balRight > balLeft ? balRight : balLeft); //die drüberliegende Node interessiert nur der längere Zweig
 	}
+}
+
+
+tnode* Tree::subTreeSearch(tnode* s_root, std::vector<int>& subTree)
+{
+	tnode* left, * right;
+	left = right = nullptr;
+	if (subTree.size() > 0)
+	{
+		s_root = nodeSearch(s_root, subTree[subTree.size() - 1]);
+		if (s_root != nullptr)
+		{
+			subTree.pop_back();
+			if (s_root->left != nullptr)
+			{
+				left = subTreeSearch(s_root->left, subTree);
+			}
+			if (s_root->right != nullptr)
+			{
+				right = subTreeSearch(s_root->right, subTree);
+			}
+			if (subTree.size() > 0)
+			{
+				return nullptr;
+			}
+		}
+	}
+	return s_root;
+}
+
+
+tnode* Tree::nodeSearch(tnode* node, int n)
+{
+	tnode* result = nullptr;
+	if (n == node->key) 
+	{ 
+		return node;
+	}
+	if (n < node->key)
+	{
+		if (node->left != nullptr) {
+			result = nodeSearch(node->left, n);
+			if (result == nullptr)
+			{
+				return result;
+			}
+		}
+		else { return nullptr; }
+	}
+	if (n > node->key)
+	{
+		if (node->right != nullptr) {
+			result = nodeSearch(node->right, n);
+		}
+		else { return nullptr; }
+	}
+
+	return result;
 }

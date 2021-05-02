@@ -28,6 +28,10 @@ public:
 
     tnode* root;
 
+    tnode* subTreeSearch(tnode* node, std::vector<int>& subTree);
+
+    tnode* nodeSearch(tnode* root, int n);
+
 private:
 
     //int maxValue, minValue, totalValue, nodesCount;
