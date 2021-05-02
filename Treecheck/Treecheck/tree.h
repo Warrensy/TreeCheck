@@ -28,7 +28,9 @@ public:
 
     tnode* root;
 
-    tnode* subTreeSearch(tnode* node, std::vector<int>& subTree);
+    tnode* subTreeSearch(tnode* s_tree, std::vector<int>& subTree);
+
+    bool subTreeSearchAlt(tnode* sub, tnode* parent = nullptr);
 
     tnode* nodeSearch(tnode* root, int n);
 

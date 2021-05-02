@@ -35,7 +35,29 @@ Tree::Tree()
 	else
 	{
 		std::cout << "Subtree not found.\n";
-	}	
+	}
+
+	std::cout << "Enter 'y' to submit Subtree. (Empty Subtree = skip)\n";
+	std::cout << "Subtree Search: \n";
+	input = "";
+	tnode* subtree = nullptr;
+
+	while (input != "x") {
+		std::cin >> input;
+		while (input != "y") {
+			if (subtree == nullptr) {
+				subtree = new tnode;
+				subtree->key = stoi(input);
+			}
+			else
+				addNode(subtree, stoi(input));
+
+			std::cin >> input;
+		}
+		std::cout << "Is subtree?: " << (subTreeSearchAlt(subtree) == true ? "yes" : "no") << std::endl;
+		deleteTree(subtree);
+		subtree = nullptr;
+	}
 }
 
 Tree::~Tree()
@@ -198,13 +220,13 @@ tnode* Tree::search(tnode* node, int n, std::vector<int>& path)
 		path.emplace_back(node->key);
 		return node;
 	}
-	if (n < node->key)
+	else if (n < node->key)
 	{
 		if (node->left != nullptr) {
 			left = search(node->left, n, path);
 		}
 	}
-	if (n > node->key)
+	else if (n > node->key)
 	{
 		if (node->right != nullptr) {
 			right = search(node->right, n, path);
@@ -273,6 +295,36 @@ tnode* Tree::subTreeSearch(tnode* s_root, std::vector<int>& subTree)
 		}
 	}
 	return s_root;
+}
+
+bool Tree::subTreeSearchAlt(tnode* sub, tnode* parent) //parent = main tree parent
+{														//parent heißt hier die Node von dem Hauptbaum mit demseblen key wie die Elternode vom sub
+	bool left, right;									//sub ist eine Node von dem subtree
+	left = right = true;
+	
+	if (parent == nullptr) //bei der Root-Node von dem Subtree ist der parent nullptr
+	{
+		parent = nodeSearch(this->root, sub->key);
+		if (parent == nullptr)
+			return false; //1. false, wenn die Root-Node vom Subtree nicht in dem Hauptbaum ist
+	}
+	else {
+		if ((parent = nodeSearch(parent, sub->key)) == nullptr) { //2. false, wenn die Node nicht vom parent erreichbar ist
+			return false;
+		}
+	}
+	if (sub->left != nullptr) { //checkt den linken Teilbaum
+		left = subTreeSearchAlt(sub->left, parent);
+	}
+	if (sub->right != nullptr) { //checkt den rechten Teilbaum
+		right = subTreeSearchAlt(sub->right, parent);
+	}
+
+	if (left == false || right == false) { //wenn mindestens eine Node nicht stimmt, wird es hier abgefangen
+		return false;
+	}
+
+	return true; //wenn alles stimmt, ist der Binary tree wirklich ein Subtree
 }
 
 
