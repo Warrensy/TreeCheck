@@ -65,6 +65,7 @@ void Tree::deleteTree(tnode* node)
 	delete node;
 }
 
+//A wrapper for the search function
 tnode* Tree::superSearch(std::string nodeToFind)
 {
 	tnode* resultNode = nullptr;
@@ -273,7 +274,7 @@ bool Tree::subTreeSearch(tnode* sub, tnode* parent) //parent = main tree parent
 	return true; //wenn alles stimmt, ist der Binary tree wirklich ein Subtree
 }
 
-
+//Wie search() aber ohne Pfad
 tnode* Tree::nodeSearch(tnode* node, int n)
 {
 	tnode* result = nullptr;

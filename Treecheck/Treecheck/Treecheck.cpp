@@ -27,15 +27,20 @@ int main(int argc, char* argv[])
         subTreePath = "x";
         Tree* tree = new Tree(treePath, subTreePath);
     }
-    if (argc == 3)
+    else if (argc == 3)
     {
         treePath = argv[1];
         subTreePath = argv[2];
         Tree* tree = new Tree(treePath, subTreePath);
     }
-    std::cin >> treePath;
-    std::cin >> subTreePath;
-    Tree* tree = new Tree(treePath, subTreePath);
+    else
+    {
+        std::cout << "Tree path: ";
+        std::cin >> treePath;
+        std::cout << "\nSubtree path: ";
+        std::cin >> subTreePath;
+        Tree* tree = new Tree(treePath, subTreePath);
+    }
     
 	return 0;
 }
