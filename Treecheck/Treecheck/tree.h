@@ -7,14 +7,12 @@
 class Tree
 {
 public:
-    Tree();
+    Tree(std::string treePath, std::string subTreePath);
     ~Tree();
 
-    void read(std::string filePath = "null");
+    void read(std::string filePath, std::string subTreePath);
 
     void findAvgMinMax(tnode* node, int& minValue, int& maxValue, int& totalValue, int& nodesCount);
-
-    void printTree(tnode* node);
 
     void addNode(tnode* node, int newKey);
 
@@ -28,9 +26,7 @@ public:
 
     tnode* root;
 
-    tnode* subTreeSearch(tnode* s_tree, std::vector<int>& subTree);
-
-    bool subTreeSearchAlt(tnode* sub, tnode* parent = nullptr);
+    bool subTreeSearch(tnode* sub, tnode* parent = nullptr);
 
     tnode* nodeSearch(tnode* root, int n);
 

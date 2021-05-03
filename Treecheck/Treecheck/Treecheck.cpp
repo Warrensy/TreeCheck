@@ -13,26 +13,29 @@
 // argv[0]      is alway the absolute filename of the running program
 // argv[1]      should be a filename, which contains numbers in each line to fill the BST
 // argv[2]      should be a filename, which contains a subtree to search in the original BST
-// int main(int argc, char* argv[])
 
-int main() 
+int main(int argc, char* argv[])
 {
-    //std::string filename_tree, filename_subtree;
-    Tree* tree = new Tree();
-
-    //if (argc >= 2) {
-    //    filename_tree = argv[1];
-    //    if (!fillBSTfromFile(tree, filename_tree)) return 1;
-    //}
-    //else {
-    //    std::cout << "treecheck: Missing filename, which contains numbers to fill the BST." << std::endl;
-    //    return 1;
-    //}
-    //
-    //if (argc == 3) {
-    //    filename_subtree = argv[2];
-    //    if (!fillBSTfromFile(subTree, filename_subtree)) return 1;
-    //}
+    std::string treePath, subTreePath;
+    if (argc == 1)
+    {
+        std::cout << "Missing Tree-File.";
+    }
+    else if (argc == 2)
+    {
+        treePath = argv[1];
+        subTreePath = "x";
+        Tree* tree = new Tree(treePath, subTreePath);
+    }
+    if (argc == 3)
+    {
+        treePath = argv[1];
+        subTreePath = argv[2];
+        Tree* tree = new Tree(treePath, subTreePath);
+    }
+    std::cin >> treePath;
+    std::cin >> subTreePath;
+    Tree* tree = new Tree(treePath, subTreePath);
     
 	return 0;
 }

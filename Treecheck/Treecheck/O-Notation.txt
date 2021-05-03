@@ -1,0 +1,296 @@
+#include <fstream>
+#include "tree.h"
+
+Tree::Tree()
+{
+	this->isAVL = true;
+	this->root = nullptr;
+	read();
+
+	std::string nodeToFind; 
+	do {
+		std::cout << "Enter 'x' to skip.\n";
+		std::cout << "Search: ";
+		std::cin >> nodeToFind;
+		superSearch(nodeToFind);
+	} while (nodeToFind.compare("x") != 0);
+	std::vector<int> subTree;
+	std::string input;
+
+	std::cout << "Enter 'y' to submit Subtree. (Empty Subtree = skip)\n";
+	std::cout << "Subtree Search: \n";
+	input = "";
+	tnode* subtree = nullptr;
+
+	while (input != "x") {
+		std::cin >> input;
+		while (input != "y") {
+			if (subtree == nullptr) {
+				subtree = new tnode;
+				subtree->key = stoi(input);
+			}
+			else
+				addNode(subtree, stoi(input));
+
+			std::cin >> input;
+		}
+		std::cout << "Is subtree?: " << (subTreeSearchAlt(subtree) == true ? "yes" : "no") << std::endl;
+		deleteTree(subtree);
+		subtree = nullptr;
+	}
+}
+
+Tree::~Tree()
+{
+	deleteTree(this->root);
+}
+
+void Tree::addNode(tnode* node, int newKey)			O(log n) 
+{
+	if (newKey < node->key)							O(1)
+	{
+		if (node->left == nullptr)					O(1)
+		{
+			node->left = new tnode;					O(1)
+			node->left->key = newKey;
+		}
+		addNode(node->left, newKey);				O(1)
+	}
+	if (newKey > node->key)							 .
+	{												 .	
+		if (node->right == nullptr)					 .
+		{
+			node->right = new tnode;
+			node->right->key = newKey;
+		}
+		else
+		{
+		addNode(node->right, newKey);				O(1)
+		}
+	}
+}
+
+void Tree::deleteTree(tnode* node)					O(n)
+{
+	if (node->left != nullptr)						O(1)
+	{
+		deleteTree(node->left);						O(1)
+	}
+	if (node->right != nullptr)						 .
+	{
+		deleteTree(node->right);					 .
+	}
+	delete node;
+}
+
+tnode* Tree::superSearch(std::string nodeToFind)	O(log n²) = O(log n) * O(log n) || Supersearch(log n) * search(log n)
+{
+	tnode* resultNode = nullptr;					O(1)
+	if (nodeToFind != "x")							O(1)
+	{
+		std::vector<int> path;						O(1)
+		if ((resultNode = this->search(this->root, stoi(nodeToFind), path)) != nullptr)		O(1)
+		{
+			std::cout << nodeToFind << " found ";	O(1)
+			for (int i = path.size() - 1; i >= 0; i--)	O(1)
+			{
+				std::cout << path[i] << (i != 0 ? ", " : "\n");	O(1)
+			}
+		}
+		else
+		{
+			std::cout << nodeToFind << " Not Found" << std::endl;	O(1)
+		}
+	}
+
+	return resultNode;								O(1)
+}
+
+// Ließt Baum aus .txt file aus.
+void Tree::read(std::string filePath)				O(log n) abhängig von der Größe des Baumes
+{
+	std::string readText;							O(1)
+	int newKey = 0;									O(1)
+	if (filePath.compare("null") == 0) {			O(1)
+		std::cout << "Dateipfad für import: ";		O(1)
+		std::cin >> filePath;						O(1)
+	}
+	std::fstream MyReadFile(filePath);				O(1)
+	
+	// Für den ersten Knoten.
+	getline(MyReadFile, readText);					O(1)
+	newKey = stoi(readText);						O(1)	
+	this->root = new tnode;							O(1)
+	this->root->key = newKey;						O(1)
+
+	while (getline(MyReadFile, readText))			O(1)
+	{
+		newKey = stoi(readText);					O(1)
+		addNode(this->root, newKey);				O(1)
+	}
+	std::cout << std::endl << "Baum erfolgreich eingebunden" << std::endl;	O(1)
+	printTree(this->root);							O(1)
+
+	int minValue, maxValue, totalValue, nodesCount;	O(1)
+	minValue = maxValue = NULL;						O(1)
+	totalValue = nodesCount = 0;					O(1)
+	findAvgMinMax(this->root, minValue, maxValue, totalValue, nodesCount);	O(1)
+	std::cout << "Max: " << maxValue << std::endl;	O(1)
+	std::cout << "Min: " << minValue << std::endl;	O(1)
+	std::cout << "Avg: " << (float)totalValue/(float)nodesCount << std::endl;	O(1)
+
+	calcBalance(this->root);	O(1)
+
+	//std::cout << "Found:" << this->search(this->root, 100);
+
+	MyReadFile.close();	O(1)
+}
+
+void Tree::findAvgMinMax(::tnode* node, int& minValue, int& maxValue, int& totalValue, int& nodesCount) O(log n) abhängig von der Größe des Baumes
+{
+	nodesCount++;								O(1)
+	totalValue += node->key;					O(1)
+	if (minValue == NULL && maxValue == NULL) {	O(1)
+		maxValue = node->key;					O(1)
+		minValue = node->key;					O(1)
+	}
+	else {
+		if (node->key > maxValue)				O(1)
+			maxValue = node->key;				O(1)
+		if (node->key < minValue)				O(1)
+			minValue = node->key;				O(1)
+	}
+
+	if (node->left != nullptr)					O(1)
+	{
+		findAvgMinMax(node->left, minValue, maxValue, totalValue, nodesCount);	O(1)
+	}
+	if (node->right != nullptr)					O(1)
+	{
+		findAvgMinMax(node->right, minValue, maxValue, totalValue, nodesCount);	O(1)
+	}
+
+	return;										O(1)
+}	
+
+
+
+tnode* Tree::search(tnode* node, int n, std::vector<int>& path)		O(log n) abhängig von der Größe des Baumes
+{
+	tnode* left, * right;						O(1)
+	left = right = nullptr;						O(1)
+	
+	if (n == node->key) {						O(1)
+		path.emplace_back(node->key);			O(1)
+		return node;							O(1)
+	}
+	else if (n < node->key)						O(1)
+	{
+		if (node->left != nullptr) {			O(1)
+			left = search(node->left, n, path);	O(1)
+		}
+	}
+	else if (n > node->key)						O(1)
+	{		
+		if (node->right != nullptr) {			O(1)	
+			right = search(node->right, n, path);	O(1)
+		}
+	}
+
+	if (left != nullptr) {						O(1)
+		path.emplace_back(node->key);			O(1)
+		return left;							O(1)
+	}
+	if (right != nullptr) {						O(1)
+		path.emplace_back(node->key);			O(1)
+		return right;							O(1)
+	}
+	return nullptr;								O(1)
+}
+
+//Berechnet die Balanz für jede Node, rekursiv
+int Tree::calcBalance(tnode* node)				O(log n) abhängig von der Größe des Baumes
+{
+	int bal, balLeft, balRight;					O(1)
+	bal = balLeft = balRight = 0;				O(1)	
+	if (node->left != nullptr)					O(1)
+	{
+		balLeft = calcBalance(node->left);		O(1)
+	}
+	if (node->right != nullptr)					O(1)
+	{
+		balRight = calcBalance(node->right);	O(1)
+	}
+	bal = balRight - balLeft; /*links ist hierbei die "negative" Balanz*/	O(1)
+	std::cout << "bal(" << node->key << ") = " << bal << (bal < -1 || bal > 1 ? " (AVL violation!)" : "") << "\n";
+	bal < -1 || bal > 1 ? this->isAVL = false : false;	O(1)
+
+	if (node->right == nullptr && node->left == nullptr) { //Blattknoten 
+		return 1; 								O(1)
+	}
+	else {										O(1)
+		return 1 + (balRight > balLeft ? balRight : balLeft); //die drüberliegende Node interessiert nur der längere Zweig
+	}
+}
+
+bool Tree::subTreeSearchAlt(tnode* sub, tnode* parent) 	O(log n²) || subTreeSearch(log n) * search(log n)
+{														
+	bool left, right;							O(1)		
+	left = right = true;						O(1)
+	
+	if (parent == nullptr) //bei der Root-Node von dem Subtree ist der parent nullptr
+	{
+		parent = nodeSearch(this->root, sub->key);	O(1)
+		if (parent == nullptr)					O(1)
+			return false; //1. false, wenn die Root-Node vom Subtree nicht in dem Hauptbaum ist
+	}
+	else {										O(1)
+		if ((parent = nodeSearch(parent, sub->key)) == nullptr) { //2. false, wenn die Node nicht vom parent erreichbar ist
+			return false;						O(1)
+		}
+	}
+	if (sub->left != nullptr) { //checkt den linken Teilbaum
+		left = subTreeSearchAlt(sub->left, parent);	O(1)
+	}
+	if (sub->right != nullptr) { //checkt den rechten Teilbaum
+		right = subTreeSearchAlt(sub->right, parent);	O(1)
+	}
+
+	if (left == false || right == false) { //wenn mindestens eine Node nicht stimmt, wird es hier abgefangen
+		return false;							O(1)
+	}
+
+	return true; //wenn alles stimmt, ist der Binary tree wirklich ein Subtree
+}
+
+
+tnode* Tree::nodeSearch(tnode* node, int n)		O(log n)	
+{
+	tnode* result = nullptr;					O(1)
+	if (n == node->key) 						O(1)
+	{ 
+		return node;							O(1)
+	}
+	if (n < node->key)							O(1)
+	{
+		if (node->left != nullptr) {			O(1)
+			result = nodeSearch(node->left, n);	O(1)
+			if (result == nullptr)				O(1)
+			{
+				return result;					O(1)
+			}
+		}
+		else { return nullptr; }				O(1)
+	}
+	if (n > node->key)							O(1)
+	{
+		if (node->right != nullptr) {			O(1)
+			result = nodeSearch(node->right, n);O(1)
+		}
+		else { return nullptr; }				O(1)
+	}
+
+	return result;								O(1)
+}
+												====
+												O(log n²)
