@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     std::string treePath, subTreePath;
     if (argc == 1)
     {
-        std::cout << "Missing Tree-File.";
+        std::cout << "Missing Tree-File.\n";
     }
     else if (argc == 2)
     {
