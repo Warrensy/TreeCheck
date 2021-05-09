@@ -23,7 +23,7 @@ Tree::~Tree()
 	deleteTree(this->root);
 }
 
-// Rekursiv. Geht systematisch nach links oder rechts bis er eine Node einfügen kann.
+// Rekursiv. Geht systematisch nach links oder rechts bis er eine Node einfügen kann. Werte die schon im Baum existieren können keine der if-Statements betretten. Key-Value wird ignoriert.
 void Tree::addNode(tnode* node, int newKey)
 {
 	if (newKey < node->key)
